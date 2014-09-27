@@ -1,0 +1,60 @@
+BEGIN,2014-09-24 19:30:37:883 GMT+05:30
+Antennas,  Build=0105, API=2
+
+Record, Time="2014-09-24 19:30:40:740 GMT+05:30", Phone Type=GSM, Network Type=EDGE, Country=in, Operator=40492
+ACTIVE GSM, LAC=1377, CID=3532, Signal= -67dBm
+GSM, LAC=1377, CID=3514, PSC=-1, TYP=1, Signal= -77dBm
+GSM, LAC=1377, CID=44213, PSC=-1, TYP=1, Signal= -77dBm
+GSM, LAC=1377, CID=3533, PSC=-1, TYP=1, Signal= -79dBm
+GSM, LAC=1377, CID=44211, PSC=-1, TYP=1, Signal= -81dBm
+GSM, LAC=1377, CID=36391, PSC=-1, TYP=1, Signal= -87dBm
+GSM, LAC=1377, CID=3534, PSC=-1, TYP=1, Signal= -87dBm
+Network Location, Provider=N, Lat=19.132124, Lon=72.906728
+Best Location, Provider=N, Lat=19.132124, Lon=72.906728
+
+Record, Time="2014-09-24 19:30:43:923 GMT+05:30", Phone Type=GSM, Network Type=EDGE, Country=in, Operator=40492
+ACTIVE GSM, LAC=1377, CID=3532, Signal= -67dBm
+GSM, LAC=1377, CID=3514, PSC=-1, TYP=1, Signal= -77dBm
+GSM, LAC=1377, CID=44213, PSC=-1, TYP=1, Signal= -77dBm
+GSM, LAC=1377, CID=3533, PSC=-1, TYP=1, Signal= -79dBm
+GSM, LAC=1377, CID=44211, PSC=-1, TYP=1, Signal= -81dBm
+GSM, LAC=1377, CID=36391, PSC=-1, TYP=1, Signal= -87dBm
+GSM, LAC=1377, CID=3534, PSC=-1, TYP=1, Signal= -87dBm
+Network Location, Provider=N, Lat=19.132124, Lon=72.906728
+Best Location, Provider=N, Lat=19.132124, Lon=72.906728
+
+Record, Time="2014-09-24 19:31:00:394 GMT+05:30", Phone Type=GSM, Network Type=EDGE, Country=in, Operator=40492
+ACTIVE GSM, LAC=1377, CID=3532, Signal= -107dBm
+GSM, LAC=1377, CID=44213, PSC=-1, TYP=1, Signal= -73dBm
+GSM, LAC=1377, CID=3514, PSC=-1, TYP=1, Signal= -75dBm
+GSM, LAC=1377, CID=44211, PSC=-1, TYP=1, Signal= -77dBm
+GSM, LAC=1377, CID=3533, PSC=-1, TYP=1, Signal= -81dBm
+GSM, LAC=1377, CID=36391, PSC=-1, TYP=1, Signal= -89dBm
+GSM, LAC=1377, CID=3534, PSC=-1, TYP=1, Signal= -89dBm
+Network Location, Provider=N, Lat=19.134854, Lon=72.91179
+Best Location, Provider=N, Lat=19.134854, Lon=72.91179
+
+Record, Time="2014-09-24 19:31:16:864 GMT+05:30", Phone Type=GSM, Network Type=EDGE, Country=in, Operator=40492
+ACTIVE GSM, LAC=1377, CID=3532, Signal= -63dBm
+GSM, LAC=1377, CID=44211, PSC=-1, TYP=1, Signal= -73dBm
+GSM, LAC=1377, CID=3533, PSC=-1, TYP=1, Signal= -77dBm
+GSM, LAC=1377, CID=44213, PSC=-1, TYP=1, Signal= -77dBm
+GSM, LAC=1377, CID=3514, PSC=-1, TYP=1, Signal= -81dBm
+GSM, LAC=1377, CID=61043, PSC=-1, TYP=1, Signal= -85dBm
+GSM, LAC=1377, CID=36391, PSC=-1, TYP=1, Signal= -87dBm
+Network Location, Provider=N, Lat=19.134854, Lon=72.91179
+Best Location, Provider=N, Lat=19.134854, Lon=72.91179
+
+Record, Time="2014-09-24 19:31:34:766 GMT+05:30", Phone Type=GSM, Network Type=EDGE, Country=in, Operator=40492
+ACTIVE GSM, LAC=1377, CID=3532, Signal= -61dBm
+GSM, LAC=1377, CID=44211, PSC=-1, TYP=1, Signal= -65dBm
+GSM, LAC=1377, CID=44213, PSC=-1, TYP=1, Signal= -67dBm
+GSM, LAC=1377, CID=3533, PSC=-1, TYP=1, Signal= -105dBm
+GSM, LAC=1377, CID=3514, PSC=-1, TYP=1, Signal= -79dBm
+GSM, LAC=1377, CID=54001, PSC=-1, TYP=1, Signal= -83dBm
+GSM, LAC=1377, CID=36391, PSC=-1, TYP=1, Signal= -83dBm
+Network Location, Provider=N, Lat=19.134854, Lon=72.91179
+Best Location, Provider=N, Lat=19.134854, Lon=72.91179
+
+
+END,2014-09-24 19:56:36:591 GMT+05:30
