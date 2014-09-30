@@ -72,15 +72,17 @@ def GetGSMlines(gsmLine):
 def GetNetLocation(NetLoc):
     myNetLocation=[]
     if NetLoc[0]=='Network Location':
-        myNetLocation.append(NetLoc[2])
-        myNetLocation.append(NetLoc[3].rstrip('\n'))
+        myNetLocation.append(NetLoc[2])#Lat
+        myNetLocation.append(NetLoc[3].rstrip('\n'))#Lon
+        myNetLocation.append(NetLoc[1])#Provider
         return myNetLocation
 # 5: get best location
 def GetBestLocation(BestLoc):
     myBestLocation=[]
     if BestLoc[0]=='Best Location':
-        myBestLocation.append(BestLoc[2])
-        myBestLocation.append(BestLoc[3].rstrip('\n'))
+        myBestLocation.append(BestLoc[2])#Lat
+        myBestLocation.append(BestLoc[3].rstrip('\n'))#Lon
+        myBestLocation.append(BestLoc[1])#Provider
         return myBestLocation
 # 6: Generate SQL with best location best signal
 # structure (1 Record, 1 ACTIVE GSM, 0 to n GSM, 1 Network Location, 1 Best Location)
@@ -164,4 +166,138 @@ def GetAllNetBestLoc(MyGSMsmBl):
             DataAllNewGSM.append(GSMPureSig[1])
             DataAllGood.append(DataAllNewGSM)
     return DataAllGood
-#************************************************** 
+# 11: Generate all network for best location with all other details
+# structure (1 Record, 1 ACTIVE GSM, 0 to n GSM, 1 Network Location, 1 Best Location)
+def GetAllLogDetails(AllDetailData):
+    DataAllGood = []
+    dataAllNetBest = []
+    # process datetime
+    DateTime = AllDetailData[0][0]
+    DateTime = ProcessMe(DateTime)
+    DateTime = removeGMT(DateTime[1])
+    #print DateTime
+    # phone Type
+    PhoneType = AllDetailData[0][1]
+    PhoneType = ProcessMe(PhoneType)
+    PhoneType = PhoneType[1]
+    #print PhoneType
+    # network Type
+    NetworkType = AllDetailData[0][2]
+    NetworkType = ProcessMe(NetworkType)
+    NetworkType = NetworkType[1]
+    #print NetworkType
+    # operator identification
+    OperatorID = AllDetailData[0][4]
+    OperatorID = ProcessMe(OperatorID)
+    OperatorID = OperatorID[1]
+    #print OperatorID
+    # to seperate samples with no other GSM signals
+    if len(AllDetailData)<5:
+        # network Antena id (e.g. ACTIVE GSM, LAC=1377, CID=3533, Signal= >-52dBm)
+        NetworkAntena = AllDetailData[1][1]
+        NetworkAntena = ProcessMe(NetworkAntena)
+        NetworkAntena = NetworkAntena[1]
+        #print NetworkAntena
+        #
+        mYSignal = ProcessMe(AllDetailData[1][2])
+        mYSignal[1] = removeGtLt(mYSignal[1])
+        if len(mYSignal[1])>7:
+            mYSignal[1] = mYSignal[1][2:5]
+        else:
+            mYSignal[1] = mYSignal[1][2:4]
+        # Get latitude
+        LatProcess = ProcessMe(AllDetailData[-1][0])
+        # Get longitude
+        LonProcess = ProcessMe(AllDetailData[-1][1])
+        # Get gps_source
+        myGPSsource = ProcessMe(AllDetailData[-1][2])
+        #print (LatProcess,LonProcess, myGPSsource)
+        #
+        dataAllNetBest.append(LatProcess[1])
+        dataAllNetBest.append(LonProcess[1])        
+        dataAllNetBest.append(mYSignal[1])
+        dataAllNetBest.append(DateTime)
+        dataAllNetBest.append(PhoneType)
+        dataAllNetBest.append(NetworkType)
+        dataAllNetBest.append(OperatorID)
+        dataAllNetBest.append(NetworkAntena)
+        dataAllNetBest.append(myGPSsource[1])
+        #        
+        DataAllGood.append(dataAllNetBest)
+    else:
+        # network Antena id (e.g. ACTIVE GSM, LAC=1377, CID=3533, Signal= >-52dBm)
+        NetworkAntena = AllDetailData[1][1]
+        NetworkAntena = ProcessMe(NetworkAntena)
+        NetworkAntena = NetworkAntena[1]
+        #print ('my %s')%(NetworkAntena)
+        #
+        mYSignal = ProcessMe(AllDetailData[1][2])
+        mYSignal[1] = removeGtLt(mYSignal[1])
+        if len(mYSignal[1])>7:
+            mYSignal[1] = mYSignal[1][2:5]
+        else:
+            mYSignal[1] = mYSignal[1][2:4]
+        # Get latitude
+        LatProcess = ProcessMe(AllDetailData[-1][0])
+        # Get longitude
+        LonProcess = ProcessMe(AllDetailData[-1][1])
+        # Get gps_source
+        myGPSsource = ProcessMe(AllDetailData[-1][2])
+        #print (LatProcess,LonProcess, myGPSsource)
+        #
+        dataAllNetBest.append(LatProcess[1])
+        dataAllNetBest.append(LonProcess[1])        
+        dataAllNetBest.append(mYSignal[1])
+        dataAllNetBest.append(DateTime)
+        dataAllNetBest.append(PhoneType)
+        dataAllNetBest.append(NetworkType)
+        dataAllNetBest.append(OperatorID)
+        dataAllNetBest.append(NetworkAntena)
+        dataAllNetBest.append(myGPSsource[1])
+        DataAllGood.append(dataAllNetBest)
+        # tricky part to extract the GSM data 
+        GSMDataLength = len(AllDetailData)-2
+        GSMPureData = AllDetailData[2:GSMDataLength]
+        for aa in range(0,len(GSMPureData)):
+            DataAllNewGSM = []
+            # GSM network Antena id (e.g. GSM, LAC=1377, CID=36392, PSC=-1, TYP=1, Signal= -103dBm)
+            GSMNetworkAntena = GSMPureData[aa][1]
+            GSMNetworkAntena = ProcessMe(GSMNetworkAntena)
+            GSMNetworkAntena = GSMNetworkAntena[1]
+            #print ('my pure %s')%(GSMNetworkAntena)
+            # Signal Strength
+            GSMPureSig = ProcessMe(GSMPureData[aa][-1])
+            GSMPureSig[1] = removeGtLt(GSMPureSig[1])
+            if len(GSMPureSig[1])>7:
+                GSMPureSig[1] = GSMPureSig[1][2:5]
+            else:
+                GSMPureSig[1] = GSMPureSig[1][2:4]
+            DataAllNewGSM.append(LatProcess[1])
+            DataAllNewGSM.append(LonProcess[1])
+            DataAllNewGSM.append(GSMPureSig[1])
+            DataAllNewGSM.append(DateTime)
+            DataAllNewGSM.append(PhoneType)
+            DataAllNewGSM.append(NetworkType)
+            DataAllNewGSM.append(OperatorID)
+            DataAllNewGSM.append(GSMNetworkAntena)
+            DataAllNewGSM.append(myGPSsource[1])
+            DataAllGood.append(DataAllNewGSM)
+    return DataAllGood
+# 12:
+def removeGMT(DateTime):
+    MyTable = string.maketrans( '', '', )
+    DateTime = DateTime.translate(MyTable,'"')    
+    MyDateTime = re.split(" GMT",DateTime)
+    MyDateTime = MyDateTime[0]
+    MyDateTime = re.split(":",MyDateTime)
+    MyDateTime = ('%s:%s:%s.%s')%(MyDateTime[0],MyDateTime[1],MyDateTime[2],MyDateTime[3])
+    return MyDateTime
+#
+# 13: Generate Detail SQL from list for given table
+def GenerateDetailSQL(ListData, tableName):
+    #print (ListData)
+    # e.g.
+    # INSERT INTO field_obs_antena_3 VALUES (0, TimeStamp, network_antena, gps_source, phone_type, network_type, operator_id, signal_strength, GeometryFromText('MULTIPOINT ((78.210785 21.454251))',-4326));
+    SQLstatement = ("INSERT INTO %s VALUES(0, '%s', '%s', '%s', '%s', '%s', '%s', '%s',GeometryFromText('MULTIPOINT (%s %s)',-4326));\n")%(tableName, ListData[3], ListData[7], ListData[8], ListData[4], ListData[5], ListData[6], ListData[2], ListData[1], ListData[0])
+    return SQLstatement
+#************************************************     
