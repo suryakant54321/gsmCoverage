@@ -1,14 +1,21 @@
+#/usr/bin/python
+# -*- coding: utf-8 -*-
+"""
+Objectives: Extract content from log files.
+"""
+from details import *   
 import os, re, time, shutil, string
 os.chdir(os.getcwd())
-#**************************************************
-# 0. Open one by one file from given directory and returns the multilist 
+
+# Open one by one file from given directory and returns the multilist 
 def ProcessMyAllFiles(InDirName, OutDirName):
     AllFilesData = []
     for fils in os.listdir(InDirName):
+	print(fils)
         if fils.endswith(".log"):
             currentPath = ("%s/%s")%(InDirName,fils)
             movePath = OutDirName
-            #print movePath
+            #print(movePath)
             sampleBlock = 0
             aa = -1
             DataAll = []
@@ -39,7 +46,7 @@ def ProcessMyAllFiles(InDirName, OutDirName):
             AllFilesData.append(DataTemp)
             shutil.move(currentPath, movePath)
     return AllFilesData
-# 1: Colllect IMP part one by one
+# Colllect IMP part one by one
 def GetGSMrecord(LineData):
     myRecord = []
     if LineData[0] =='Record':
@@ -49,7 +56,7 @@ def GetGSMrecord(LineData):
         myRecord.append(LineData[4])
         myRecord.append(LineData[5].rstrip('\n'))
         return myRecord
-# 2: get active GSM
+# Get active GSM
 def GetActiveGSM(activeLine):
     ActiveGSMdetails = []
     #print activeLine[0]
@@ -58,7 +65,7 @@ def GetActiveGSM(activeLine):
         ActiveGSMdetails.append(activeLine[2])
         ActiveGSMdetails.append(activeLine[3].rstrip('\n'))
         return ActiveGSMdetails
-# 3: get GSM lines if any
+# Get GSM lines if any
 def GetGSMlines(gsmLine):
     myGSMline = []
     if gsmLine[0] =='GSM':
@@ -68,7 +75,7 @@ def GetGSMlines(gsmLine):
         myGSMline.append(gsmLine[4])
         myGSMline.append(gsmLine[5].rstrip('\n'))
         return myGSMline
-# 4: get network location
+# Get network location
 def GetNetLocation(NetLoc):
     myNetLocation=[]
     if NetLoc[0]=='Network Location':
@@ -76,7 +83,7 @@ def GetNetLocation(NetLoc):
         myNetLocation.append(NetLoc[3].rstrip('\n'))#Lon
         myNetLocation.append(NetLoc[1])#Provider
         return myNetLocation
-# 5: get best location
+# Get best location
 def GetBestLocation(BestLoc):
     myBestLocation=[]
     if BestLoc[0]=='Best Location':
@@ -84,7 +91,7 @@ def GetBestLocation(BestLoc):
         myBestLocation.append(BestLoc[3].rstrip('\n'))#Lon
         myBestLocation.append(BestLoc[1])#Provider
         return myBestLocation
-# 6: Generate SQL with best location best signal
+# Generate SQL with best location best signal
 # structure (1 Record, 1 ACTIVE GSM, 0 to n GSM, 1 Network Location, 1 Best Location)
 # seperate only Active GSM and Best Location
 def GetBsBl(GSMSampleBlock):
@@ -102,23 +109,23 @@ def GetBsBl(GSMSampleBlock):
     dataInSQL.append(LonProcess[1])
     dataInSQL.append(SignalProcess[1])
     return dataInSQL
-# 7: Process for equal to sign
+# Process for equal to sign
 def ProcessMe(dataToProcess):
     ProcessedData = re.split("=",dataToProcess)
     return ProcessedData 
-# 8: remove greater than less than sign
+# Remove greater than less than sign
 def removeGtLt(dataIn):
     table = string.maketrans( '', '', )
     DataIn = dataIn.translate(table,"<>")
     return DataIn
-# 9: Generate SQL from list for given table
+# Generate SQL from list for given table
 def GenerateSQL(ListData, tableName):
     listLen = len(ListData)
     # e.g.
     # INSERT INTO field_obs_antena_3 VALUES (0, '2014-01-31 16:34:38.718' , NULL, NULL, 'N','75', GeometryFromText('MULTIPOINT ((78.210785 21.454251))',-4326));
     SQLstatement = ("INSERT INTO %s VALUES(0, '%s',GeometryFromText('MULTIPOINT (%s %s)',-4326));\n")%(tableName, ListData[2], ListData[1], ListData[0])
     return SQLstatement
-# 10: Generate all network for best location
+# Generate all network for best location
 # structure (1 Record, 1 ACTIVE GSM, 0 to n GSM, 1 Network Location, 1 Best Location)
 def GetAllNetBestLoc(MyGSMsmBl):
     DataAllGood = []
@@ -166,7 +173,7 @@ def GetAllNetBestLoc(MyGSMsmBl):
             DataAllNewGSM.append(GSMPureSig[1])
             DataAllGood.append(DataAllNewGSM)
     return DataAllGood
-# 11: Generate all network for best location with all other details
+# Generate all network for best location with all other details
 # structure (1 Record, 1 ACTIVE GSM, 0 to n GSM, 1 Network Location, 1 Best Location)
 def GetAllLogDetails(AllDetailData):
     DataAllGood = []
@@ -283,7 +290,8 @@ def GetAllLogDetails(AllDetailData):
             DataAllNewGSM.append(myGPSsource[1])
             DataAllGood.append(DataAllNewGSM)
     return DataAllGood
-# 12:
+
+# Remove GMT timestamp
 def removeGMT(DateTime):
     MyTable = string.maketrans( '', '', )
     DateTime = DateTime.translate(MyTable,'"')    
@@ -292,12 +300,13 @@ def removeGMT(DateTime):
     MyDateTime = re.split(":",MyDateTime)
     MyDateTime = ('%s:%s:%s.%s')%(MyDateTime[0],MyDateTime[1],MyDateTime[2],MyDateTime[3])
     return MyDateTime
-#
-# 13: Generate Detail SQL from list for given table
+
+# Generate Detail SQL from list for given table
 def GenerateDetailSQL(ListData, tableName):
     #print (ListData)
     # e.g.
     # INSERT INTO field_obs_antena_3 VALUES (0, TimeStamp, network_antena, gps_source, phone_type, network_type, operator_id, signal_strength, GeometryFromText('MULTIPOINT ((78.210785 21.454251))',-4326));
     SQLstatement = ("INSERT INTO %s VALUES(0, '%s', '%s', '%s', '%s', '%s', '%s', '%s',GeometryFromText('MULTIPOINT (%s %s)',-4326));\n")%(tableName, ListData[3], ListData[7], ListData[8], ListData[4], ListData[5], ListData[6], ListData[2], ListData[1], ListData[0])
     return SQLstatement
-#************************************************     
+
+#************************************************
